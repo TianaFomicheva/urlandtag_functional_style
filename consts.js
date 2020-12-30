@@ -13,6 +13,8 @@ const CSS_PROPS = {
 
 }
 const CLICKED_ELS = ['#addbutton #fa-plus-outer', '#dismissfield>i']
+
+
 const tags = a => {
     if ($('#' + a).innerHTML == 'undefined') {
         return $('#' + a).innerHTML
@@ -40,7 +42,7 @@ const use_data = (a, b) => {
     $('#' + a).html(start_tag);
     clicked_title(a)
 }
-const autocomplete_data = a => {
+const autocomplete_data = (b,a) => {
     let autocomplete_arr = [];
     JSON.parse(a).map(item => {
         autocomplete_arr.push(item.tag)
@@ -51,8 +53,7 @@ const autocomplete_data = a => {
 
     });
 }
-
-const manual_data = a => {
+const manual_data = (b,a) => {    
     JSON.parse(a).map(item => {
         showContent(item)
     });
@@ -62,20 +63,22 @@ const manual_data = a => {
 
     })
 }
-
+const METHOD = {
+    'lasttags' : use_data,
+    'populartags' : use_data,
+    'manual' : manual_data,
+    'autocomplete' : autocomplete_data,
+}
+const choose_method = a=>{                                
+    return METHOD[a]
+}
 const start = a => {
     $.ajax({
         method: 'POST',
         url: URL,
         data: { type: a },
-        success: function (data) {
-            if (a == 'lasttags' || a == 'populartags') {
-                return use_data(a, data)
-            }
-            if (a == 'autocomplete') {
-                return autocomplete_data(data)
-            }
-            return manual_data(data)
+        success: function (data) {            
+         choose_method(a)(a,data)       
         }
 
     })
@@ -84,30 +87,23 @@ const start = a => {
 const clicks = (a) => {
     let b = document.querySelector(a)
     b.addEventListener('click', (a) => {
-        changeCss(a)
+        changeCss(a.target.className)
     })
 }
-const changeCss = a => {
-    let transf
-    let ind
-    let disp = false;
-    if (a.target.className == 'fa fa-plus') {
-        transf = 0
-        ind = 999999
-        disp = 'none'
+const changeTransform = (a,b,c)=>{
+    $('#addField').css('transform', 'translateY(' + a + '%)').css('z-index', b);
+    $('#addbutton>i').css('display', c);
+}
+
+const changeCss = a => {    
+    if (a == 'fa fa-plus') {
+        changeTransform(0,999999, 'none')        
         $('#showurlfield').html('')
-
-
     }
-    if (a.target.className == 'fa fa-times') {
-        transf = 200
-        ind = 0
-        disp = 'block'
+    if (a == 'fa fa-times') {
+        changeTransform(200,0,'block')        
     }
-    if (disp) {
-        $('#addField').css('transform', 'translateY(' + transf + '%)').css('z-index', ind);
-        $('#addbutton>i').css('display', disp);
-    }
+    
 
 }
 
@@ -136,21 +132,18 @@ const getCode = e => {
 }
 const checkCommVal = a => {
     if (a !== '') {
-        if (a.length > 4) {
-            $('#err1').css('display', 'none')
+        if (a.length > 4) {            
             $('#err3').css('display', 'none')
             return true
         }
     }
     let mess = (a == '') ? MESSAGES['not_empty'] : MESSAGES['less_length']
-    $('#err3').html(mess)
-    $('#err3').css('display', 'block')
+    $('#err3').html(mess).css('display', 'block')
     return false
 }
 const checkAddVal = function (a) {
     if (a == '') {
-        $('#err1').html(MESSAGES['not_empty'])
-        $('#err1').css('display', 'block')
+        $('#err1').html(MESSAGES['not_empty']).css('display', 'block')
     }
     return function (b) {        
         return (checkCommVal(b) && (a !== ''))
