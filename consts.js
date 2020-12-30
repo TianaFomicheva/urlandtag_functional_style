@@ -1,10 +1,10 @@
 const URL = 'addUrl.php'
-const START_TYPES = [ 'autocomplete',  'manual',  'lasttags',  'populartags' ]
+const START_TYPES = ['autocomplete', 'manual', 'lasttags', 'populartags']
 const MESSAGES = {
     'not_whitespace': 'Значение не должно включать пробелы',
     'more_length': 'Текст должен быть не более 550 символов',
     'not_sharp': 'Значение не должно включать символ #',
-    'not_empty' : 'Поле не должно быть пустым',
+    'not_empty': 'Поле не должно быть пустым',
     'less_length': 'Длина текста должна быть не менее 5 символов',
     'post_added': 'Спасибо! Ваша запись успешно добавлена!'
 }
@@ -111,59 +111,58 @@ const changeCss = a => {
 
 }
 
-const showErr = (a,b) =>{
-    let mess = MESSAGES['not_whitespace']   
-    if(a == 51){
+const showErr = (a, b) => {
+    let mess = MESSAGES['not_whitespace']
+    if (a == 51) {
         mess = MESSAGES['not_sharp']
     }
-    if(a == 1){
+    if (a == 1) {
         mess = MESSAGES['more_length']
         $('#rest').css('display', 'none')
 
     }
-    document.getElementById('err'+b).innerHTML = mess
-    document.getElementById('err'+b).style.display = 'block';
+    document.getElementById('err' + b).innerHTML = mess
+    document.getElementById('err' + b).style.display = 'block';
     return false
 }
-const showRestVal = a =>{
+const showRestVal = a => {
     $('#rest').css('display', 'block')
     $('#rest').find('span').text(a)
-    return    $('#err3').css('display','none');
+    return $('#err3').css('display', 'none');
 }
-const getCode = e =>{
+const getCode = e => {
     let theEvent = e || window.event;
-        return theEvent.keyCode || theEvent.which;
+    return theEvent.keyCode || theEvent.which;
 }
-
-const checkAddVal = (a,b) =>{
-    let err_count = 0;
-    if(a == ''){
+const checkCommVal = a => {
+    if (a !== '') {
+        if (a.length > 4) {
+            $('#err1').css('display', 'none')
+            $('#err3').css('display', 'none')
+            return true
+        }
+    }
+    let mess = (a == '') ? MESSAGES['not_empty'] : MESSAGES['less_length']
+    $('#err3').html(mess)
+    $('#err3').css('display', 'block')
+    return false
+}
+const checkAddVal = function (a) {
+    if (a == '') {
         $('#err1').html(MESSAGES['not_empty'])
         $('#err1').css('display', 'block')
-        err_count++
     }
-    if(b == ''){
-        $('#err3').html(MESSAGES['not_empty'])
-        $('#err3').css('display', 'none')
-        err_count++
+    return function (b) {        
+        return (checkCommVal(b) && (a !== ''))
     }
-    if(b.length <5){
-        $('#err3').html(MESSAGES['not_empty'])
-        $('#err3').css('display', 'none')
-        err_count++
-    }
-    if(err_count){
-        return false
-    }
-    $('#err1').css('display', 'none')
-    $('#err3').css('display', 'none')
-    return true
 }
 
-const contentField = a =>{
+
+
+const contentField = a => {
     let parsed_comment = applyLink(a['comment']);
-    let date_field = '<div class="date_added">' + a['date'] + '</div>'    
-    let comment_field = `<div class="showcomment">` + ((a['comment'] !== undefined) ? parsed_comment : '') + `</div>`   
-    return '<h3 class="showurltitle">#' + a['tag'] + '</h3><div class="showurlcontent">' + comment_field + date_field +'</div>'
+    let date_field = '<div class="date_added">' + a['date'] + '</div>'
+    let comment_field = `<div class="showcomment">` + ((a['comment'] !== undefined) ? parsed_comment : '') + `</div>`
+    return '<h3 class="showurltitle">#' + a['tag'] + '</h3><div class="showurlcontent">' + comment_field + date_field + '</div>'
 
 }

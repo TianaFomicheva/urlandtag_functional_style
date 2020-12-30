@@ -1,20 +1,20 @@
 function addToArray() {
     $('#rest').css('display', 'none');
     let addInputValue1 = $('#addInput1').val()
-    let  = $('#comment').val();
-    let add_res = checkAddVal(addInputValue1, addInputValue3)       
-    
+    let  addInputValue3 = $('#comment').val();
+    let add_res = checkAddVal(addInputValue1)(addInputValue3)       
+    if(add_res){
     $.ajax({
         url: URL,
         method: 'POST',
         data: { tag: addInputValue1, comment: addInputValue3, type: 'add' },
         success: function () {
-            $('#addInput1').val() = '';
-            $('#comment').val() = '';
+            $('#addInput1').val('');
+            $('#comment').val('');
             $('#addFieldFooter>span').text(MESSAGES['post_added']);
         }
     })
-
+    }
 
 
 }
