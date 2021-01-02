@@ -19,18 +19,15 @@ function addToArray() {
 
 }
 
-function checkFromArray(check_val = false, start_val = 0, firstcall = false) {
-    if (firstcall) {
-        $('#showurlfield').html('')
-        
-    }
+function checkFromArray(check_val = false, start_val = 0) {    
     let checkInputValue = (!check_val) ? $('#searchinput').val() : check_val;
     let from_comment = (!check_val) ? 'yes' : 'no';
+    console.log(checkInputValue)
     if (!checkInputValue) {
         return false;
     }
     $.ajax({
-        url: 'addUrl.php',
+        url: URL,
         method: 'POST',
         data: { check: checkInputValue, type: 'check', start: start_val, from_comment: from_comment},
         beforeSend: function () {
@@ -42,32 +39,20 @@ function checkFromArray(check_val = false, start_val = 0, firstcall = false) {
             $('.lds-dual-ring').css('display', 'none');
             if (JSON.parse(data).length > 0) {
                 JSON.parse(data).forEach(item => {
-                    if (!item["start"]) {
+                    if (!item["start"]) {                                               
                         showContent(item);
                     } else {
                         if (item["start"] !== -1) {                            
                             setTimeout(showMoreButton(item), 1500);
                         }
                     }
-                })                               
-                $('body').find('.showurltitle').on('click', function () {
-                    let cur_tag = $(this).text().slice(1);
-                    checkFromArray(cur_tag, 0, true);
-                })
+                })                                                          
             } else {
                 notfound()
             }
         }
     });
 }
-
-
-function notfound() {
-    if ($('body').find('.showurl').last().length == 0) {
-        $('#notfound').css('display', 'block');
-    }
-};
-
 
 function showContent(item) {    
     $('#notfount').css('display', 'none');

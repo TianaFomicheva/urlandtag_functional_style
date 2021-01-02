@@ -32,8 +32,10 @@ $('document').ready(function () {
     });
 
     $('#more').on('click', function(){       
-        checkFromArray($(this).attr('rel'), $(this).attr('start'), false)        
+        checkFromArray($(this).attr('rel'), $(this).attr('start'))        
     })
+
+    
 
 });
 

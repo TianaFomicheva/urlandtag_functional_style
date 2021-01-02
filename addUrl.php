@@ -14,7 +14,7 @@ try {
     echo "Connection failed: " . $e->getMessage();
     }
     if($_POST['type'] == 'add'){
-$tag = $_POST['tag'];
+$tag = trim($_POST['tag']);
 $comment = $_POST['comment'];
 
 $query = "INSERT INTO url_tag (tag, comment) VALUES('".$tag."', '".$comment."');";
@@ -22,7 +22,7 @@ echo $query;
 
 $conn->query($query);
     }else if($_POST['type'] == 'check'){
-        $check = $_POST['check'];
+        $check = trim($_POST['check']);
         $from_comment = $_POST['from_comment'] == 'yes' ?  "OR comment LIKE '%".$check."%'" : "";
         $start = $_POST['start'] ? $_POST['start'] : 0;
         $step = 8;
@@ -32,7 +32,6 @@ $conn->query($query);
         
 
         $query = "SELECT id, tag,  comment, date_added FROM  url_tag WHERE tag LIKE '%".$check."%' ".$from_comment." GROUP BY id ORDER BY id DESC LIMIT ".$start.",".$step.";";
-        
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         $default_date = new DateTime('2020-12-08 23:48:47');
        
