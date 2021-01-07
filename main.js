@@ -7,22 +7,18 @@ $('document').ready(function () {
         var theEvent = e || window.event;
         var key = theEvent.keyCode || theEvent.which;
         let not_allowed_key = not_allowed(e.shiftKey)        
-        return (not_allowed_key[key] == true) ?  showErr(key,1) :  document.getElementById('err1').style.display = 'none';
+        return (not_allowed_key[key] == true) ?  showErr(key,1) :  $('#err1').css('display', 'none');
 
     })
     $('#comment').keyup(function (e) {
         let rest_val = COMMENT_LENGTH - $(this).val().length                 
-        let key = getCode(e)
-        if (rest_val < 1  && !BACKSPACES[key]) {
-            return showErr(1,3)            
-        }
-        return showRestVal(rest_val)                
+        let key = getCode(e)  
+        return (rest_val < 1  && !BACKSPACES[key]) ? showErr(1,3) : showRestVal(rest_val)                
     });
 
-    document.addEventListener('keydown', function (e) {
-        let is_added_vals = check_is_added_vals()
-        
+    document.addEventListener('keydown', function (e) {             
         if (e.code == 'Enter') {
+            let is_added_vals = check_is_added_vals()   
             return is_added_vals ? $('#addButton').trigger('click') :  $('#searchbutton').trigger('click');
         }
     });

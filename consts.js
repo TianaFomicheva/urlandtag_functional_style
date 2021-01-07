@@ -114,8 +114,7 @@ const changeCss = a => {
 
 
 const showErr = (a, b) => {
-    let mess = keysMess[a] || MESSAGES['not_whitespace']
-    console.log(mess)    
+    let mess = keysMess[a] || MESSAGES['not_whitespace']  
     $('#err' + b).html(mess).css('display', 'block') 
     return false
 }
