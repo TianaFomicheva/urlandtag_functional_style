@@ -9,11 +9,20 @@ const MESSAGES = {
     'post_added': 'Спасибо! Ваша запись успешно добавлена!'
 }
 const COMMENT_LENGTH = 550;
-const CSS_PROPS = {
-
-}
 const CLICKED_ELS = ['#addbutton #fa-plus-outer', '#dismissfield>i']
-
+const keysMess = {
+    51: MESSAGES['not_sharp'],
+    1:  MESSAGES['more_length']
+}
+const MIN_COMM_VAL = 5
+const ADDFIELD_OPACITY = {
+    'fa fa-plus': { 'transform': 0, 'z-index' : 999999, 'display': 'none'},
+     'fa fa-times': { 'transform': 200, 'z-index' : 0, 'display': 'block'}
+}
+const change_opacity = (a) => {
+    $('#addField').css('transform', 'translateY(' + ADDFIELD_OPACITY[a]['transform'] + '%)').css('z-index', ADDFIELD_OPACITY[a]['z-index']);
+    return $('#addbutton>i').css('display', ADDFIELD_OPACITY[a]['display']);
+}
 
 const tags = a => {
     if ($('#' + a).innerHTML == 'undefined') {
@@ -88,22 +97,11 @@ const changeTransform = (a,b,c)=>{
     $('#addbutton>i').css('display', c);
 }
 const firstcall = ()=>{return $('#showurlfield').html('')}
-const changeCss = a => {    
-    if (a == 'fa fa-plus') {
-        changeTransform(0,999999, 'none')        
-        $('#showurlfield').html('')
-    }
-    if (a == 'fa fa-times') {
-        changeTransform(200,0,'block')        
-    }
-    
-
+const changeCss = a => {           
+    return change_opacity(a)    
 }
 
-const keysMess = {
-    51: MESSAGES['not_sharp'],
-    1:  MESSAGES['more_length']
-}
+
 const showErr = (a, b) => {
     let mess = keysMess[a] || MESSAGES['not_whitespace']    
     $('#err' + b).html(mess).css('dysplay', 'block') 
@@ -118,23 +116,28 @@ const getCode = e => {
     let theEvent = e || window.event;
     return theEvent.keyCode || theEvent.which;
 }
+
 const checkCommVal = a => {
-    if (a !== '') {
-        if (a.length > 4) {            
-            $('#err3').css('display', 'none')
-            return true
-        }
-    }
-    let mess = (a == '') ? MESSAGES['not_empty'] : MESSAGES['less_length']
-    $('#err3').html(mess).css('display', 'block')
-    return false
+
+    let valid =  (checkValEmpty(a, MESSAGES['not_empty']) && checkValLength(a, MESSAGES['less_length']))
+    $('#err3').css('display', (!valid ? 'block' : 'none'))
+    return valid
 }
-const checkAddVal = function (a) {
-    if (a == '') {
-        $('#err1').html(MESSAGES['not_empty']).css('display', 'block')
-    }
-    return function (b) {        
-        return (checkCommVal(b) && (a !== ''))
+const checkValEmpty = (a,b) =>{
+    $('#err3').html(b)
+    return a > 0
+}
+const checkValLength = (a,b) =>{
+    $('#err3').html(b)
+   return a>= MIN_COMM_VAL
+}
+    
+const checkAddVal = function (a) {    
+    return function (b) {  
+        if (a == '') {
+            $('#err1').html(MESSAGES['not_empty']).css('display', 'block')
+        }      
+        return (checkCommVal(b.length) && (a !== ''))
     }
 }
 
@@ -162,5 +165,8 @@ const notfound = ()=> {
     if ($('body').find('.showurl').last().length == 0) {
         $('#notfound').css('display', 'block');
     }
+}
+const showMoreButton = a => {
+    $('#more').css('display', 'block').attr('rel', a["common_tag"]).attr('start', a["start"])                           
 }
 

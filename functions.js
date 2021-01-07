@@ -3,18 +3,21 @@ function addToArray() {
     let addInputValue1 = $('#addInput1').val()
     let  addInputValue3 = $('#comment').val();
     let add_res = checkAddVal(addInputValue1)(addInputValue3)       
-    if(add_res){
+    if(!add_res){
+        return false
+    }
     $.ajax({
         url: URL,
         method: 'POST',
         data: { tag: addInputValue1, comment: addInputValue3, type: 'add' },
         success: function () {
-            $('#addInput1').val('');
-            $('#comment').val('');
+            $('#addField input, #addField textarea').each( function(){
+                $(this).val('')
+            })
             $('#addFieldFooter>span').text(MESSAGES['post_added']);
         }
     })
-    }
+    
 
 
 }
@@ -22,7 +25,6 @@ function addToArray() {
 function checkFromArray(check_val = false, start_val = 0) {    
     let checkInputValue = (!check_val) ? $('#searchinput').val() : check_val;
     let from_comment = (!check_val) ? 'yes' : 'no';
-    console.log(checkInputValue)
     if (!checkInputValue) {
         return false;
     }
@@ -79,6 +81,3 @@ function applyLink(comment){
     return new_comment_arr.join(" ")
 }
 
-function showMoreButton(a) {
-    $('#more').css('display', 'block').attr('rel', a["common_tag"]).attr('start', a["start"])                           
-}
