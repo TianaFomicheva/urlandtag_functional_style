@@ -116,19 +116,22 @@ const getCode = e => {
     let theEvent = e || window.event;
     return theEvent.keyCode || theEvent.which;
 }
-
+const comment_err_mess = a =>{
+    return $('#err3').html(a)
+}
 const checkCommVal = a => {
-
     let valid =  (checkValEmpty(a, MESSAGES['not_empty']) && checkValLength(a, MESSAGES['less_length']))
     $('#err3').css('display', (!valid ? 'block' : 'none'))
     return valid
 }
 const checkValEmpty = (a,b) =>{
-    $('#err3').html(b)
+    comment_err_mess(b)
+    console.log($('#err3').html())
     return a > 0
 }
 const checkValLength = (a,b) =>{
-    $('#err3').html(b)
+    comment_err_mess(b)
+    console.log($('#err3').html())
    return a>= MIN_COMM_VAL
 }
     
@@ -153,7 +156,7 @@ const contentField = a => {
 
 const clickedTitle = (e)=>{
     $('.showurltitle.contenttitle, .populartag, .lasttag').on('click', function (e) {
-            firstcall()                        
+        firstcall()                        
         let cur_tag = e.target.innerText.slice(1)
         console.log(cur_tag)
         
