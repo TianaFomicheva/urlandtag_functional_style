@@ -1,4 +1,4 @@
-function addToArray() {
+const addToArray = () =>{
     $('#rest').css('display', 'none');
     let addInputValue1 = $('#addInput1').val()
     let  addInputValue3 = $('#comment').val();
@@ -22,7 +22,9 @@ function addToArray() {
 
 }
 
-function checkFromArray(check_val = false, start_val = 0) {    
+const checkFromArray = (check_val, start_val) => {
+    check_val = check_val || false
+    start_val = start_val || 0    
     let checkInputValue = (!check_val) ? $('#searchinput').val() : check_val;
     let from_comment = (!check_val) ? 'yes' : 'no';
     if (!checkInputValue) {
@@ -33,12 +35,11 @@ function checkFromArray(check_val = false, start_val = 0) {
         method: 'POST',
         data: { check: checkInputValue, type: 'check', start: start_val, from_comment: from_comment},
         beforeSend: function () {
-            $('#more').css('display', 'none');
-            $('.lds-dual-ring').css('display', 'block');
+            dual_ring('block')
 
         },
         success: function (data) {
-            $('.lds-dual-ring').css('display', 'none');
+            dual_ring('none')
             if (JSON.parse(data).length > 0) {
                 JSON.parse(data).forEach(item => {
                     if (!item["start"]) {                                               
@@ -55,20 +56,20 @@ function checkFromArray(check_val = false, start_val = 0) {
         }
     });
 }
-
-function showContent(item) {    
+const dual_ring = a =>{
+    $('#more').css('display', 'none');
+  return   $('.lds-dual-ring').css('display', a);
+}
+const showContent = item => {    
     $('#notfount').css('display', 'none');
     let prev_showurl = $('body').find('.showurlcontent').last();
-    let content_field = contentField(item)    
-    if (prev_showurl.length == 0) {
-        $('#showurlfield').append(content_field);
-    } else {
-        prev_showurl.after(content_field)
-    }
+    let content_field = contentField(item)
+    return  (prev_showurl.length == 0) ? $('#showurlfield').append(content_field) : prev_showurl.after(content_field)
+    
 
 }
-function applyLink(comment){    
-    let comment_arr = comment.split("http");
+const  applyLink = comment =>{    
+    let comment_arr = comment.split("http")
     let new_comment_arr   =[] 
     comment_arr.map(item=> {
         if(item.indexOf('://') == 0 || item.indexOf('://') == 1){

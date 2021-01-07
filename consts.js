@@ -14,6 +14,17 @@ const keysMess = {
     51: MESSAGES['not_sharp'],
     1:  MESSAGES['more_length']
 }
+const BACKSPACES = {
+    8: true,
+    46:  true
+}
+const not_allowed =  (e)=> {
+    return {
+    32 : true,
+    51: (e ? true : false)
+
+}
+}
 const MIN_COMM_VAL = 5
 const ADDFIELD_OPACITY = {
     'fa fa-plus': { 'transform': 0, 'z-index' : 999999, 'display': 'none'},
@@ -103,8 +114,9 @@ const changeCss = a => {
 
 
 const showErr = (a, b) => {
-    let mess = keysMess[a] || MESSAGES['not_whitespace']    
-    $('#err' + b).html(mess).css('dysplay', 'block') 
+    let mess = keysMess[a] || MESSAGES['not_whitespace']
+    console.log(mess)    
+    $('#err' + b).html(mess).css('display', 'block') 
     return false
 }
 const showRestVal = a => {
@@ -120,18 +132,17 @@ const comment_err_mess = a =>{
     return $('#err3').html(a)
 }
 const checkCommVal = a => {
-    let valid =  (checkValEmpty(a, MESSAGES['not_empty']) && checkValLength(a, MESSAGES['less_length']))
+    let valid =  (checkCommValEmpty(a, MESSAGES['not_empty']) && checkCommValLength(a, MESSAGES['less_length']))
     $('#err3').css('display', (!valid ? 'block' : 'none'))
     return valid
 }
-const checkValEmpty = (a,b) =>{
+const checkCommValEmpty = (a,b) =>{
     comment_err_mess(b)
     console.log($('#err3').html())
     return a > 0
 }
-const checkValLength = (a,b) =>{
+const checkCommValLength = (a,b) =>{
     comment_err_mess(b)
-    console.log($('#err3').html())
    return a>= MIN_COMM_VAL
 }
     
@@ -171,5 +182,13 @@ const notfound = ()=> {
 }
 const showMoreButton = a => {
     $('#more').css('display', 'block').attr('rel', a["common_tag"]).attr('start', a["start"])                           
+}
+
+const check_is_added_vals = ()=>{
+    return (($('#addInput1').val().length > 0) || ($('#comment').val().length > 0))
+}
+
+const not_allowed_keys  = (a, e)=>{
+ return 
 }
 
