@@ -137,7 +137,6 @@ const checkCommVal = a => {
 }
 const checkCommValEmpty = (a,b) =>{
     comment_err_mess(b)
-    console.log($('#err3').html())
     return a > 0
 }
 const checkCommValLength = (a,b) =>{
