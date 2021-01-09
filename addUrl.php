@@ -14,14 +14,42 @@ try {
     echo "Connection failed: " . $e->getMessage();
     }
     if($_POST['type'] == 'add'){
-$tag = trim($_POST['tag']);
+$tag = $_POST['tag'];
 $comment = $_POST['comment'];
 
 $query = "INSERT INTO url_tag (tag, comment) VALUES('".$tag."', '".$comment."');";
 echo $query;
 
 $conn->query($query);
-    }else if($_POST['type'] == 'check'){
+    }
+    
+    else if($_POST['type'] == 'check_personal'){
+$tag = $_POST['tag'];
+$code = $_POST['code'];
+
+
+$query = "SELECT  tag, code   FROM  personal_tags WHERE tag LIKE '".$tag."'";
+        
+        $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        if((!$res && $code == '') || ($res[0]['tag'] == $tag && $res[0]['code'] == $code)){
+            echo 'OK';
+            exit;
+        }else if(!$res && $code !== ''){
+            $query = "INSERT INTO personal_tags (tag, code) VALUES('".$tag."', '".$code."');";
+        $conn->query($query);
+        echo 'OK';
+        exit;
+        }else{
+            echo 'NOT OK';
+            exit;
+        }
+
+        
+        
+$conn->query($query);
+    }
+    
+    else if($_POST['type'] == 'check'){
         $check = trim($_POST['check']);
         $from_comment = $_POST['from_comment'] == 'yes' ?  "OR comment LIKE '%".$check."%'" : "";
         $start = $_POST['start'] ? $_POST['start'] : 0;
@@ -32,6 +60,7 @@ $conn->query($query);
         
 
         $query = "SELECT id, tag,  comment, date_added FROM  url_tag WHERE tag LIKE '%".$check."%' ".$from_comment." GROUP BY id ORDER BY id DESC LIMIT ".$start.",".$step.";";
+        
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         $default_date = new DateTime('2020-12-08 23:48:47');
        
@@ -55,21 +84,34 @@ $conn->query($query);
     }else  if($_POST['type'] == 'lasttags'){      
         $query = "SET sql_mode = '';";
         $conn->query($query);
-        $query = "SELECT tag FROM  url_tag GROUP BY tag ORDER BY id DESC LIMIT 18;";
+        $query = "SELECT url_tag.tag, personal_tags.code FROM  url_tag LEFT JOIN personal_tags USING(tag) WHERE  personal_tags.tag IS NULL AND url_tag.tag <>'' GROUP BY url_tag.tag ORDER BY url_tag.id DESC LIMIT 18;";
 
         
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($res);
-    }else  if($_POST['type'] == 'populartags'){
+    }
+    else  if($_POST['type'] == 'populartags'){
         $query = "SET sql_mode = '';";
         $conn->query($query);
-        $query = "SELECT tag FROM  url_tag GROUP BY tag ORDER BY popularity DESC LIMIT 18;";
+        $query = "SELECT url_tag.tag, personal_tags.code FROM  url_tag LEFT JOIN personal_tags USING(tag) WHERE  personal_tags.tag IS NULL AND url_tag.tag <>'' GROUP BY url_tag.tag ORDER BY url_tag.popularity DESC LIMIT 18;";
 
         
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($res);
     
-    }else  if($_POST['type'] == 'autocomplete'){
+    }
+    else  if($_POST['type'] == 'personaltags'){
+        $query = "SET sql_mode = '';";
+        $conn->query($query);
+        $query = "SELECT url_tag.tag, personal_tags.code FROM  url_tag LEFT JOIN personal_tags USING(tag) WHERE  personal_tags.tag IS NOT NULL AND url_tag.tag <>'' GROUP BY url_tag.tag ORDER BY url_tag.popularity DESC LIMIT 18;";
+
+        
+        $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($res);
+    
+    }
+    
+    else  if($_POST['type'] == 'autocomplete'){
         $query = "SET sql_mode = '';";
         $conn->query($query);
         $query = "SELECT tag FROM  url_tag  GROUP BY tag ;";

@@ -26,9 +26,10 @@ $('document').ready(function () {
     $('#more').on('click', function(){       
         checkFromArray($(this).attr('rel'), $(this).attr('start'))        
     })
-
-    
-
+    $('#searchbutton').on('click', function(){       
+        firstcall()
+        checkFromArray(false, 0)        
+    })
 });
 
 
