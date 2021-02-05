@@ -6,8 +6,10 @@ $('document').ready(function () {
    $('#addInput1').on('keydown', function (e) {
         var theEvent = e || window.event;
         var key = theEvent.keyCode || theEvent.which;
-        let not_allowed_key = not_allowed(e.shiftKey)        
-        return (not_allowed_key[key] == true) ?  showErr(key,1) :  $('#err1').css('display', 'none');
+        let not_allowed_key = not_allowed(e.shiftKey) 
+        
+
+        return (not_allowed_key[key] == true) ?  showErr(key,1) : check_slice_symbol()
 
     })
     $('#comment').keyup(function (e) {

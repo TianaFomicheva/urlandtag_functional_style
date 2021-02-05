@@ -16,8 +16,9 @@ try {
     if($_POST['type'] == 'add'){
 $tag = $_POST['tag'];
 $comment = $_POST['comment'];
+$image = $_POST['image'];
 
-$query = "INSERT INTO url_tag (tag, comment) VALUES('".$tag."', '".$comment."');";
+$query = "INSERT INTO url_tag (tag, comment, image_name) VALUES('".$tag."', '".$comment."', '".$image."');";
 echo $query;
 
 $conn->query($query);
@@ -59,7 +60,7 @@ $conn->query($query);
         $count = $res_count[0]['count'];
         
 
-        $query = "SELECT id, tag,  comment, date_added FROM  url_tag WHERE tag LIKE '%".$check."%' ".$from_comment." GROUP BY id ORDER BY id DESC LIMIT ".$start.",".$step.";";
+        $query = "SELECT id, tag,  comment, date_added, image_name FROM  url_tag WHERE tag LIKE '%".$check."%' ".$from_comment." GROUP BY id ORDER BY id DESC LIMIT ".$start.",".$step.";";
         
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         $default_date = new DateTime('2020-12-08 23:48:47');
@@ -122,7 +123,7 @@ $conn->query($query);
     }else  if($_POST['type'] == 'manual'){
         $query = "SET sql_mode = '';";
         $conn->query($query);
-        $query = "SELECT tag, comment, date_added FROM  url_tag WHERE manual_add = '1'   LIMIT 10;";
+        $query = "SELECT tag, comment, date_added, image_name FROM  url_tag WHERE manual_add = '1'   LIMIT 10;";
         $default_date = new DateTime('2020-12-08 23:48:47');
         $res = $conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
         foreach($res as $key=>$r){

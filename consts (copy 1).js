@@ -77,7 +77,7 @@ const  applyLink = a =>{
 const success_show = data => {
     JSON.parse(data).forEach(item => {
         if (!item["start"]) {                                               
-            showContent(item);            
+            showContent(item);
         } else {
             if (item["start"] !== -1) {                            
                 setTimeout(showMoreButton(item), 1500);
@@ -104,8 +104,8 @@ const getVal = a=>{
 const makeCheckAttrs = (a,b,c)=>{
     return {check: a, type: 'check', start: b, from_comment: c}
 }
-const makeAddAttrs = (a,b, c)=>{
-    return {tag: a, type: 'add', comment: b, image: c}
+const makeAddAttrs = (a,b)=>{
+    return {tag: a, type: 'add', comment: b}
 }
 
 
@@ -165,6 +165,7 @@ const choose_method = a=>{
     return METHOD[a]
 }
 const start = a => {
+    console.log(a)
     $.ajax({
         method: 'POST',
         url: URL,
@@ -261,19 +262,17 @@ const checkAddVal = function (a) {
 
 
 const contentField = a => {
-    let src_link = (a['image_name']!== '') ? 'uploads/img/'+ a['image_name'] :false
-   let img_block  =  (src_link) ? '<div class="content_img"><img src="'+ src_link +'"/></div>' : ''
     let parsed_comment = applyLink(a['comment']);
     let date_field = '<div class="date_added">' + a['date'] + '</div>'
     let comment_field = `<div class="showcomment">` + ((a['comment'] !== undefined) ? parsed_comment : '') + `</div>`
-    return '<h3 class="showurltitle contenttitle">#' + a['tag'] + '</h3><div class="showurlcontent">'+ img_block +'<div class="showurltext">'+ comment_field + date_field + '</div></div>'
+    return '<h3 class="showurltitle contenttitle">#' + a['tag'] + '</h3><div class="showurlcontent">' + comment_field + date_field + '</div>'
 
 }
 
 const clickedTitle = (e)=>{
    
         let cur_tag = e.target.innerText.slice(1)
-
+        console.log(cur_tag)
         
         checkFromArray(cur_tag, 0);
                         
@@ -304,7 +303,24 @@ const addToArray = () =>{
     let tag_body = addInputValue1_arr[0];
     let tag_code = (addInputValue1_arr.length>1) ? addInputValue1_arr[1] : ''
     let photo = document.getElementById("image-file").files[0];  // file from input
+    var formData = new FormData();
+    formData.append('file', photo);
 
+    $.ajax({
+        url: 'upload.php',
+        type: "POST",
+        data: formData,
+        async: false,
+        success: function (msg) {
+            console.log(msg);
+        },
+        error: function(msg) {
+            alert('Ошибка!');
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
 
 
 
@@ -321,33 +337,15 @@ const addToArray = () =>{
                 if(!add_res){
                     return false
                 }
-            if(photo){
-                var formData = new FormData();
-                formData.append('file', photo);
-
+if(photo){
                 $.ajax({
-                    url: 'upload.php',
-                    type: "POST",
-                    data: formData,
-                    async: false,
-                    success: function (msg) {
-                        $.ajax({
-                            url: URL,
-                            method: 'POST',
-                            data: makeAddAttrs(tag_body, addInputValue3, msg),
-                            success: function () {
-                                post_added()
-                            }
-                        }) 
-                    },
-                    error: function(msg) {
-                        alert('Ошибка!');
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-                
+                    url: URL,
+                    method: 'POST',
+                    data: makeAddAttrs(tag_body, addInputValue3),
+                    success: function () {
+                        post_added()
+                    }
+                }) 
             }else{
                 $.ajax({
                     url: URL,

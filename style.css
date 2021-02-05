@@ -203,6 +203,14 @@ input[type=text], input[type=submit], textarea{
 .showurltitle:hover {
     color: #1e6687;
 }
+
+.content_img, .showurltext{
+    display: inline-block;
+}
+.content_img > img{
+    height: 60px;
+}
+
 #rightpanel {
     height: 100%;
 }
