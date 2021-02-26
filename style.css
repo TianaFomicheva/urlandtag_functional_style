@@ -207,10 +207,25 @@ input[type=text], input[type=submit], textarea{
 .content_img, .showurltext{
     display: inline-block;
 }
-.content_img > img{
-    height: 60px;
+.content_img{
+    width: 23%;
 }
 
+.content_img > img{
+    height: 80px;
+    width: 100%;
+    object-fit: cover;
+}
+.showurlcontent {
+display: inline-block;
+}
+
+.with_img_class{
+    width: calc(75% - 15px) !important;
+}
+.showurltext_mobile{
+    display: none;
+}
 #rightpanel {
     height: 100%;
 }
@@ -404,9 +419,7 @@ input[type=text], input[type=submit], textarea{
     display: inline-block;
     max-width: calc(95% - 5px);
 }
-.showurlcontent {
 
-}
 #showurlfield{
     padding-left: 10%;
     padding-right: 10%;
@@ -416,8 +429,8 @@ input[type=text], input[type=submit], textarea{
     cursor: pointer;
 }
 .showurlcontent > div {
-    /* padding: 5px; */
-    padding-right: 15px;
+
+    padding-right: 5px;
 }
 .date_added{
     color: #3f878c;
@@ -824,8 +837,20 @@ input[type=text], input[type=submit], textarea{
     padding-left: 0;
     padding-right: 0;
 }
+.showurltext_mobile{
+    display: block;
 }
-
+.showurltext_pc > .showcomment{
+    display: none;
+}
+.content_img{
+    width: 100%
+}
+.content_img > img {
+    height: 180px;
+    max-width: 100%;
+}
+}
 @-moz-document url-prefix() {
     #addButton {
 
