@@ -1,4 +1,4 @@
-const URL = 'addUrl.php'
+const URL = 'addData.php'
 const START_TYPES = ['autocomplete', 'manual', 'lasttags', 'populartags', 'personaltags']
 const MESSAGES = {
     'not_whitespace': 'Значение не должно включать пробелы',
@@ -9,7 +9,7 @@ const MESSAGES = {
     'post_added': 'Спасибо! Ваша запись успешно добавлена!',
     'personal_tag': 'Тег является личным, вы не можете его использовать'
 }
-const COMMENT_LENGTH = 550;
+const COMMENT_LENGTH = 550
 const CLICKED_ELS = ['#addbutton #fa-plus-outer', '#dismissfield>i']
 const keysMess = {
     51: MESSAGES['not_sharp'],
@@ -46,27 +46,27 @@ const ADDFIELD_OPACITY = {
 }
 
 
-let dual_ring = a => {
+const dual_ring = a => {
     $('#more').css('display', 'none')
     return $('.lds-dual-ring').css('display', a)
 
 }
 
 const showContent = item => {
-    $('#notfount').css('display', 'none');
-    let prev_showurl = $('body').find('.showurlcontent').last();
-    let content_field = contentField(item)
+    $('#notfount').css('display', 'none')
+    const prev_showurl = $('body').find('.showurlcontent').last()
+    const content_field = contentField(item)
     return (prev_showurl.length == 0) ? $('#showurlfield').append(content_field) : prev_showurl.after(content_field)
 
 
 }
 const applyLink = a => {
-    let comment_arr = a.split("http")
-    let new_comment_arr = []
+    const comment_arr = a.split("http")
+    const new_comment_arr = []
     comment_arr.map(item => {
         if (item.indexOf('://') == 0 || item.indexOf('://') == 1) {
-            let words = item.split(" ");
-            let url_word = words[0]
+            const words = item.split(" ")
+            const url_word = words[0]
             item = item.replace(url_word, '<a href="http' + url_word + '" target= "_blank">http' + url_word.slice(0, 19) + '...</a>')
         }
         new_comment_arr.push(item)
@@ -77,10 +77,10 @@ const applyLink = a => {
 const success_show = data => {
     JSON.parse(data).forEach(item => {
         if (!item["start"]) {
-            showContent(item);
+            showContent(item)
         } else {
             if (item["start"] !== -1) {
-                setTimeout(showMoreButton(item), 1500);
+                setTimeout(showMoreButton(item), 1500)
             }
         }
 
@@ -94,8 +94,8 @@ const post_added = () => {
     $('#addField input, #addField textarea').each(function () {
         $(this).val('')
     })
-    $('#rest').css('display', 'none');
-    return $('#addFieldFooter>span').text(MESSAGES['post_added']);
+    $('#rest').css('display', 'none')
+    return $('#addFieldFooter>span').text(MESSAGES['post_added'])
 }
 
 const getVal = a => {
@@ -110,8 +110,8 @@ const makeAddAttrs = (a, b, c) => {
 
 
 const change_opacity = (a) => {
-    $('#addField').css('transform', 'translateY(' + ADDFIELD_OPACITY[a]['transform'] + '%)').css('z-index', ADDFIELD_OPACITY[a]['z-index']);
-    return $('#addbutton>i').css('display', ADDFIELD_OPACITY[a]['display']);
+    $('#addField').css('transform', 'translateY(' + ADDFIELD_OPACITY[a]['transform'] + '%)').css('z-index', ADDFIELD_OPACITY[a]['z-index'])
+    return $('#addbutton>i').css('display', ADDFIELD_OPACITY[a]['display'])
 }
 
 const tags = a => {
@@ -124,7 +124,7 @@ const tags_item = (a, b) => {
     return '<span class="' + a.slice(0, -1) + '" rel="' + b.tag + '">#' + b.tag + ' </span>'
 }
 const tags_sum = (a, b) => {
-    return a + b;
+    return a + b
 }
 
 
@@ -133,24 +133,24 @@ const use_data = (a, b) => {
     JSON.parse(b).map(item => {
         start_tag = tags_sum(start_tag, tags_item(a, item))
     })
-    $('#' + a).html(start_tag);
+    $('#' + a).html(start_tag)
 
 }
 const autocomplete_data = (b, a) => {
-    let autocomplete_arr = [];
+    const autocomplete_arr = []
     JSON.parse(a).map(item => {
         autocomplete_arr.push(item.tag)
-    });
+    })
     $('#searchinput, #addInput1').keydown(function () {
-        let attr_id = $(this).attr('id');
+        const attr_id = $(this).attr('id')
         autocomplete(document.getElementById(attr_id), autocomplete_arr)
 
-    });
+    })
 }
 const manual_data = (b, a) => {
     JSON.parse(a).map(item => {
         showContent(item)
-    });
+    })
 
 
 }
@@ -171,18 +171,12 @@ const start = a => {
         data: { type: a },
         success: function (data) {
             choose_method(a)(a, data)
-
         },
         complete: function () {
-
-
             $('.' + CLASSES[a]).on('click', function (e) {
-
                 firstcall()
                 clickedTitle(e)
             })
-
-
         }
     })
 }
@@ -194,8 +188,8 @@ const clicks = (a) => {
     })
 }
 const changeTransform = (a, b, c) => {
-    $('#addField').css('transform', 'translateY(' + a + '%)').css('z-index', b);
-    $('#addbutton>i').css('display', c);
+    $('#addField').css('transform', 'translateY(' + a + '%)').css('z-index', b)
+    $('#addbutton>i').css('display', c)
 }
 const firstcall = () => { return $('#showurlfield').html('') }
 const changeCss = a => {
@@ -206,10 +200,10 @@ const changeCss = a => {
 const check_slice_symbol = () => {
     $('#addInput1').on('keyup', function (e) {
 
-        let adding_tag = getVal('addInput1')
+        const adding_tag = getVal('addInput1')
         if (LAST_SIMBOL[adding_tag.slice(-1)]) {
             $('#err1').html(MESSAGES[LAST_SIMBOL[adding_tag.slice(-1)]]).css('display', 'block')
-            $(this).val(adding_tag.slice(0, -1));
+            $(this).val(adding_tag.slice(0, -1))
 
             return false
         }
@@ -219,24 +213,24 @@ const check_slice_symbol = () => {
 
 const showErr = (a, b) => {
 
-    let mess = keysMess[a] || MESSAGES['not_whitespace']
+    const mess = keysMess[a] || MESSAGES['not_whitespace']
     $('#err' + b).html(mess).css('display', 'block')
     return false
 }
 const showRestVal = a => {
     $('#rest').css('display', 'block')
     $('#rest').find('span').text(a)
-    return $('#err3').css('display', 'none');
+    return $('#err3').css('display', 'none')
 }
 const getCode = e => {
-    let theEvent = e || window.event;
-    return theEvent.keyCode || theEvent.which;
+    const theEvent = e || window.event
+    return theEvent.keyCode || theEvent.which
 }
 const comment_err_mess = a => {
     return $('#err3').html(a)
 }
 const checkCommVal = a => {
-    let valid = (checkCommValEmpty(a, MESSAGES['not_empty']) && checkCommValLength(a, MESSAGES['less_length']))
+    const valid = (checkCommValEmpty(a, MESSAGES['not_empty']) && checkCommValLength(a, MESSAGES['less_length']))
     $('#err3').css('display', (!valid ? 'block' : 'none'))
     return valid
 }
@@ -264,7 +258,7 @@ const contentField = a => {
     const src_link = (a['image_name'] !== '') ? 'uploads/img/' + a['image_name'] : false
     const img_block = (src_link) ? '<div class="content_img"><img src="' + src_link + '"/></div>' : ''
     const with_img_class = (src_link) ? ' with_img_class' : ''
-    const parsed_comment = applyLink(a['comment']);
+    const parsed_comment = applyLink(a['comment'])
     const date_field = '<div class="date_added">' + a['date'] + '</div>'
     const comment_field = `<div class="showcomment">` + ((a['comment'] !== undefined) ? parsed_comment : '') + `</div>`
     const content_header = '<h3 class="showurltitle contenttitle">#' + a['tag'] + '</h3>'
@@ -272,20 +266,13 @@ const contentField = a => {
 
 }
 
-const clickedTitle = (e) => {
-
-    let cur_tag = e.target.innerText.slice(1)
-
-
-    checkFromArray(cur_tag, 0);
-
-
-
+const clickedTitle = (e) => {    
+    return checkFromArray(e.target.innerText.slice(1), 0)
 }
 
 const notfound = () => {
     if ($('body').find('.showurl').last().length == 0) {
-        $('#notfound').css('display', 'block');
+        $('#notfound').css('display', 'block')
     }
 }
 const showMoreButton = a => {
@@ -336,22 +323,22 @@ const checkPersonal = (tag_body, tag_code)=>{
                 cache: false,
                 contentType: false,
                 processData: false
-            });
+            })
         })             
     }            
 const addToArray = () => {
     const addInputValue3 = getVal('comment')
-    const addInputValue1_arr = getVal('addInput1').split("@");
+    const addInputValue1_arr = getVal('addInput1').split("@")
     const tag_code  = getTagCode(addInputValue1_arr)
-    const tag_body = addInputValue1_arr[0];
-    const photo = document.getElementById("image-file").files[0]; 
+    const tag_body = addInputValue1_arr[0]
+    const photo = document.getElementById("image-file").files[0]
     checkPersonal(tag_body, tag_code)
     .then(    
         (data)=> {
             if (data !== 'OK') {
                 showErr(2, 1)
             } else {
-                let add_res = checkAddVal(tag_body)(addInputValue3)
+                const add_res = checkAddVal(tag_body)(addInputValue3)
                 if (!add_res) {
                     return false
                 }
@@ -376,10 +363,10 @@ const addToArray = () => {
 const checkFromArray = (check_val, start_val) => {
     check_val = check_val || false
     start_val = start_val || 0
-    let checkInputValue = (!check_val) ? getVal('searchinput') : check_val;
-    let from_comment = (!check_val) ? 'yes' : 'no';
+    const checkInputValue = (!check_val) ? getVal('searchinput') : check_val
+    const from_comment = (!check_val) ? 'yes' : 'no'
     if (!checkInputValue) {
-        return false;
+        return false
     }
     $.ajax({
         url: URL,
@@ -393,15 +380,13 @@ const checkFromArray = (check_val, start_val) => {
                 dual_ring('none')
             }
             (JSON.parse(data).length > 0) ? success_show(data) : notfound()
-        },
-        complete: function () {
-        },
+        },        
         complete: function () {
             $('.contenttitle').on('click', function (e) {
                 firstcall()
                 clickedTitle(e)
             })
         }
-    });
+    })
 }
 
